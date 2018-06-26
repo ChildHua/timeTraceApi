@@ -17,6 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:api')->group(function ($router) {
+    Route::post('/markTag', 'TimeTraceController@store');
+    Route::post('/index', 'TimeTraceController@index');
+});
 
 Route::prefix('auth')->group(function ($router) {
     $router->post('login', 'AuthController@login');
@@ -27,5 +31,3 @@ Route::prefix('auth')->group(function ($router) {
 Route::middleware('refresh.token')->group(function ($router) {
     $router->get('profile', 'UserController@profile');
 });
-Route::post('/markTag', 'TimeTraceController@store');
-Route::post('/index', 'TimeTraceController@index');
