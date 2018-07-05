@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 //use App\Transformers\UserTransformer;
@@ -29,6 +30,15 @@ class AuthController extends Controller
 
         // 验证参数，如果验证失败，则会抛出 ValidationException 的异常
         $params = $this->validate($request, $rules);
+
+        //判断账号状态
+        $user = User::where('email','=',$request->input('email'))->first();
+        if (!$user){
+            return response('此邮箱尚未注册',404);
+        }
+        if (!$user->status){
+            return response(json_encode(['error'=>'此邮箱尚未激活']),404);
+        }
 
         // 使用 Auth 登录用户，如果登录成功，则返回 201 的 code 和 token，如果登录失败则返回
         return ($token = Auth::guard('api')->attempt($params))

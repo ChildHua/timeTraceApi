@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/active',function(\Illuminate\Http\Request $request){
+    $user_id = decrypt($request->input('activeCode'));
+    $user = \App\User::find($user_id);
+    $user->status = 1;
+    $user->save();
+    return view('active');
+});

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Mail\Register;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -58,6 +60,9 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $res = $this->create($request->all());
+        if ($res){
+            Mail::to($request->input('email'))->send(new Register(encrypt($res->id)));
+        }
         return response($res?'success':'fail');
     }
     /**
@@ -69,7 +74,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'name' => $data['email'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
