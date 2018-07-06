@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->group(function ($router) {
     Route::post('/markTag', 'TimeTraceController@store');
     Route::post('/index', 'TimeTraceController@index');
+    Route::get('/monthStat/user/{user}/month/{month}','TimeTraceController@monthStat');
 });
 
 Route::prefix('auth')->group(function ($router) {

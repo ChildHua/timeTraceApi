@@ -17,6 +17,14 @@ class TimeTraceController extends Controller
         return response($block->getBlock($request->input('user'),$request->input('belong')));
     }
 
+    public function monthStat($user,$month,TimeBlock $block)
+    {
+        $month_data = $block->whereRaw("user = {$user} and MONTH(created_at) = {$month}")
+            ->get()->pluck('tag');
+
+        return response($month_data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
